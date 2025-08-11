@@ -21,35 +21,30 @@ build:
   string: default_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
   missing_dso_whitelist:
     - "*libcudart.so*"
-  #ignore_run_exports:
-  #  - libstdcxx-ng
-  #  - libcxx
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
   track_features:
-    - cudatoolkit               # [cuda_compiler_version != "None"]
+    - cudatoolkit  # [cuda_compiler_version != "None"]
 
 requirements:
   build:
-    - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
-    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-    - pkg-config                # [unix]
-    - autotools_clang_conda     # [win]
-    - make                      # [unix]
-    - automake                  # [unix]
-    - libtool                   # [unix]
-    - autoconf                  # [unix]
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
+    - autotools_clang_conda  # [win]
+    - pkg-config  # [unix]
+    - make  # [unix]
+    - automake  # [unix]
+    - libtool  # [unix]
+    - autoconf  # [unix]
   host:
     - libxml2
-    #- winpthreads-devel         # [win]
-  run:
-    - __cuda                    # [cuda_compiler_version != "None"]
 
 test:
   commands:
-    - hwloc-ls                                     # [cuda_compiler_version == "None"]
-    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}   # [unix]
+    - hwloc-ls  # [cuda_compiler_version == "None"]
+    - hwloc-info --version  # [cuda_compiler_version == "None"]
+    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_LIB%\hwloc.lib exit 1  # [win]
 
 about:
@@ -57,6 +52,7 @@ about:
   dev_url: https://github.com/open-mpi/hwloc
   doc_url: https://www-lb.open-mpi.org/projects/hwloc/doc
   license: BSD-3-Clause
+  license_family: BSD
   license_file: COPYING
   summary: Portable Hardware Locality (hwloc)
   description: |
