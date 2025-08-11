@@ -20,6 +20,8 @@ build:
   skip: true  # [cuda_compiler_version != "None" and win]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: default_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+  missing_dso_whitelist:
+    - "*libcudart.so*"
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
   track_features:
