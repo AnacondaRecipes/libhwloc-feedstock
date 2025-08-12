@@ -1,6 +1,6 @@
 # the conda build parameters to use
 build_parameters:
-  - "--suppress-variables"
-  - "--skip-existing"
-  - "--error-overlinking"
-  - "--variants \"{skip_cuda_prefect: True}\""
+  - "--suppress-variables"  # [(linux and x86_64) and (cuda_compiler_version != "None")]
+  - "--skip-existing"  # [(linux and x86_64) and (cuda_compiler_version != "None")]
+  - "--error-overlinking"  # [(linux and x86_64) and (cuda_compiler_version != "None")]
+  - "--no-test"  # [(linux and x86_64) and (cuda_compiler_version != "None")]
