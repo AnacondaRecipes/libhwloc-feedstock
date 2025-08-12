@@ -47,11 +47,11 @@ requirements:
     - __cuda                    # [cuda_compiler_version != "None"]
 
 test:
-  commands:
+  commands:  # [cuda_compiler_version == "None"]
     - hwloc-ls  # [cuda_compiler_version == "None"]
     - hwloc-info --version  # [cuda_compiler_version == "None"]
-    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}  # [unix]
-    - if not exist %LIBRARY_LIB%\hwloc.lib exit 1  # [win]
+    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}  # [unix and (cuda_compiler_version == "None")]
+    - if not exist %LIBRARY_LIB%\hwloc.lib exit 1  # [win and (cuda_compiler_version == "None")]
 
 about:
   home: https://www.open-mpi.org/projects/hwloc
