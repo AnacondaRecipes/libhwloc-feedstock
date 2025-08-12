@@ -44,7 +44,7 @@ requirements:
   host:
     - libxml2
   run:
-    - __cuda                     # [cuda_compiler_version != "None"]
+    - __cuda                    # [cuda_compiler_version != "None"]
 
 test:
   commands:
