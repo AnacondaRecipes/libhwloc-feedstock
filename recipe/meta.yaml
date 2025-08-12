@@ -20,9 +20,13 @@ build:
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: default_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
   missing_dso_whitelist:
-    - "*libcudart.so*"
+    - "*libcudart.so*"  # [cuda_compiler_version != "None"]
+  ignore_run_exports:
+    - libstdcxx-ng
+    - libcxx
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
+  # weigh down gpu implementation and give nocuda preference
   track_features:
     - cudatoolkit  # [cuda_compiler_version != "None"]
 
@@ -30,15 +34,17 @@ requirements:
   build:
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
-    - autotools_clang_conda  # [win]
-    - pkg-config  # [unix]
-    - make  # [unix]
-    - automake  # [unix]
-    - libtool  # [unix]
-    - autoconf  # [unix]
+    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    - autotools_clang_conda     # [win]
+    - pkg-config                # [unix]
+    - make                      # [unix]
+    - automake                  # [unix]
+    - libtool                   # [unix]
+    - autoconf                  # [unix]
   host:
     - libxml2
+  run:
+   - __cuda                     # [cuda_compiler_version != "None"]
 
 test:
   commands:
