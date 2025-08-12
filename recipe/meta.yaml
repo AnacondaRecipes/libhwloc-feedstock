@@ -71,3 +71,7 @@ extra:
     - jan-janssen
     - inducer
     - isuruf
+  skip-lints:
+    # make check for all builds.
+    # commands, if cuda_compiler_version is None.
+    - missing_tests
