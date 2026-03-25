@@ -32,7 +32,8 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-    - autotools_clang_conda     # [win]
+    - cmake                     # [win]
+    - ninja                     # [win]
     - pkg-config                # [unix]
     - make                      # [unix]
     - automake                  # [unix]
