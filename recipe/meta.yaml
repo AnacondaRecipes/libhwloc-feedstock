@@ -14,6 +14,8 @@ package:
 source:
   url: https://www.open-mpi.org/software/{{ pname }}/v{{ '.'.join(version.split('.')[:2]) }}/downloads/{{ pname }}-{{ version }}.tar.gz
   sha256: ffa02c3a308275a9339fbe92add054fac8e9a00cb8fe8c53340094012cb7c633
+  patches:
+    - patches/0001-cmake-skip-x86-on-non-x86-architectures.patch  # [win]
 
 build:
   number: {{ build }}
