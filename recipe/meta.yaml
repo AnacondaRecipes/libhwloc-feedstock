@@ -1,6 +1,6 @@
 {% set name = "libhwloc" %}
 {% set pname = "hwloc" %}
-{% set version = "2.12.1" %}
+{% set version = "2.13.0" %}
 
 {% set build = 0 %}
 {% if cuda_compiler_version == "None" %}
@@ -13,14 +13,12 @@ package:
 
 source:
   url: https://www.open-mpi.org/software/{{ pname }}/v{{ '.'.join(version.split('.')[:2]) }}/downloads/{{ pname }}-{{ version }}.tar.gz
-  sha256: ffa02c3a308275a9339fbe92add054fac8e9a00cb8fe8c53340094012cb7c633
+  sha256: 1514a5253f0a5c23bc006d3bdd30a6f6125c9a8dc9b5fa4984913d1fff45315d
 
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: default_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-  missing_dso_whitelist:
-    - "*libcudart.so*"  # [cuda_compiler_version != "None"]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
   # weigh down gpu implementation and give nocuda preference
@@ -40,15 +38,16 @@ requirements:
     - autoconf                  # [unix]
   host:
     - libxml2
+    - cuda-cudart-dev {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
   run:
     - __cuda                    # [cuda_compiler_version != "None"]
 
 test:
-  commands:  # [cuda_compiler_version == "None"]
-    - hwloc-ls  # [cuda_compiler_version == "None"]
-    - hwloc-info --version  # [cuda_compiler_version == "None"]
-    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}  # [unix and (cuda_compiler_version == "None")]
-    - if not exist %LIBRARY_LIB%\hwloc.lib exit 1  # [win and (cuda_compiler_version == "None")]
+  commands:
+    - hwloc-ls                                     # [cuda_compiler_version == "None"]
+    - hwloc-info --version                         # [cuda_compiler_version == "None"]
+    - test -f ${PREFIX}/lib/libhwloc${SHLIB_EXT}   # [unix]
+    - if not exist %LIBRARY_LIB%\hwloc.lib exit 1  # [win]
 
 about:
   home: https://www.open-mpi.org/projects/hwloc
