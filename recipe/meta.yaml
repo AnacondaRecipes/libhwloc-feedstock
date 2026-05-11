@@ -19,9 +19,6 @@ build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: default_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
-  missing_dso_whitelist:
-    - "*libcudart.so*"          # [linux and cuda_compiler_version != "None"]
-    - "*cudart64*.dll"          # [win and cuda_compiler_version != "None"]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
   # weigh down gpu implementation and give nocuda preference

@@ -44,7 +44,7 @@ case "${target_platform:-${TARGET_PLATFORM}}" in
           export CPPFLAGS="$CPPFLAGS -I$BUILD_PREFIX/Library/include"
           export LDFLAGS="$LDFLAGS -L$CUDA_LIBDIR"
           ./configure --enable-cuda --prefix="$PREFIX" --libdir="$PREFIX/lib" \
-            --disable-cairo --disable-opencl --disable-nvml --disable-gl --disable-libudev \
+            --disable-cairo --disable-opencl --disable-gl --disable-libudev \
             --disable-static || (cat config.log; false)
         else
           ./configure --prefix="$PREFIX" --libdir="$PREFIX/lib" $DISABLES --disable-static || (cat config.log; false)
