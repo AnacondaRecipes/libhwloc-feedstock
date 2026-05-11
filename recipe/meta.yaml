@@ -37,7 +37,7 @@ requirements:
     - libtool                   # [unix]
     - autoconf                  # [unix]
   host:
-    - libxml2
+    - libxml2 {{ libxml2 }}
     - cuda-cudart-dev {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
   run:
     - __cuda                    # [cuda_compiler_version != "None"]
