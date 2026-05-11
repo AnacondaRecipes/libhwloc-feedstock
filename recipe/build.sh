@@ -16,7 +16,9 @@ case "${target_platform:-${TARGET_PLATFORM}}" in
         autoreconf -ivf
         export LDFLAGS="${LDFLAGS} -Wl,--as-needed"
         if [[ ${cuda_compiler_version} != "None" ]]; then
-          ./configure --enable-cuda --prefix=$PREFIX --disable-cairo --disable-opencl --disable-gl --disable-libudev
+          # cuda-cudart-dev installs headers + libs into $BUILD_PREFIX (lib/ + include/)
+          ./configure --enable-cuda --with-cuda=$BUILD_PREFIX --prefix=$PREFIX \
+            --disable-cairo --disable-opencl --disable-nvml --disable-gl --disable-libudev
         elif [[ ${ROCM_COMPILATION} == "enabled" ]]; then
           ./configure --prefix=$PREFIX --enable-rsmi $DISABLES
         else
@@ -31,7 +33,24 @@ case "${target_platform:-${TARGET_PLATFORM}}" in
         sed -i "s|-Xlinker --output-def -Xlinker .libs/libhwloc.def||g" hwloc/Makefile.am
         autoreconf -ivf
         chmod +x configure
-        ./configure --prefix="$PREFIX" --libdir="$PREFIX/lib" $DISABLES --disable-static || (cat config.log; false)
+        if [[ ${cuda_compiler_version} != "None" ]]; then
+          # cudart.lib path differs between CUDA 12.x (Library/lib) and 13.x (Library/lib/x64)
+          if [[ ${cuda_compiler_version} == 12.* ]]; then
+            CUDA_LIBDIR="$BUILD_PREFIX/Library/lib"
+          else
+            CUDA_LIBDIR="$BUILD_PREFIX/Library/lib/x64"
+          fi
+          # hwloc.m4 falls back to header+lib autoconf probes when pkg-config
+          # cannot find cuda-$VERSION.pc (no .pc file shipped on Windows).
+          # Inject conda CUDA paths via CPPFLAGS / LDFLAGS so the probe succeeds.
+          export CPPFLAGS="$CPPFLAGS -I$BUILD_PREFIX/Library/include"
+          export LDFLAGS="$LDFLAGS -L$CUDA_LIBDIR"
+          ./configure --enable-cuda --prefix="$PREFIX" --libdir="$PREFIX/lib" \
+            --disable-cairo --disable-opencl --disable-nvml --disable-gl --disable-libudev \
+            --disable-static || (cat config.log; false)
+        else
+          ./configure --prefix="$PREFIX" --libdir="$PREFIX/lib" $DISABLES --disable-static || (cat config.log; false)
+        fi
         patch_libtool
         make V=1
         ;;
