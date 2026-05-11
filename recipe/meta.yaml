@@ -42,7 +42,6 @@ requirements:
   host:
     - libxml2
     - cuda-cudart-dev {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - cuda-version {{ cuda_compiler_version }}     # [cuda_compiler_version != "None"]
   run:
     - __cuda                    # [cuda_compiler_version != "None"]
 

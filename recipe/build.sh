@@ -16,9 +16,7 @@ case "${target_platform:-${TARGET_PLATFORM}}" in
         autoreconf -ivf
         export LDFLAGS="${LDFLAGS} -Wl,--as-needed"
         if [[ ${cuda_compiler_version} != "None" ]]; then
-          # cuda-cudart-dev installs headers + libs into $BUILD_PREFIX (lib/ + include/)
-          ./configure --enable-cuda --with-cuda=$BUILD_PREFIX --prefix=$PREFIX \
-            --disable-cairo --disable-opencl --disable-nvml --disable-gl --disable-libudev
+          ./configure --enable-cuda --prefix=$PREFIX --disable-cairo --disable-opencl --disable-gl --disable-libudev
         elif [[ ${ROCM_COMPILATION} == "enabled" ]]; then
           ./configure --prefix=$PREFIX --enable-rsmi $DISABLES
         else
