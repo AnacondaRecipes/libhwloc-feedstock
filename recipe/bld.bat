@@ -1,9 +1,12 @@
 set "CUDA_CMAKE_ARGS="
 if not "%cuda_compiler_version%"=="None" (
-  rem hwloc links cudart at build time; point CMake at conda CUDA in BUILD_PREFIX
+  rem Conda CUDA on Windows uses BUILD_PREFIX\Library as the toolkit root
+  rem (include/, lib/, bin/nvcc.exe) — not the env root itself.
   set "CUDA_HOME=%BUILD_PREFIX%\Library"
   set "CUDA_PATH=%BUILD_PREFIX%\Library"
-  set "CUDA_CMAKE_ARGS=-DHWLOC_WITH_CUDA=ON -DCUDAToolkit_ROOT=%BUILD_PREFIX%"
+  set "CUDA_CMAKE_ARGS=-DHWLOC_WITH_CUDA=ON -DCUDAToolkit_ROOT=%BUILD_PREFIX%\Library"
+  rem CUDA 13.x moved import libs from Library\lib to Library\lib\x64
+  echo %cuda_compiler_version% | findstr /b "13." >nul && set "CUDA_CMAKE_ARGS=%CUDA_CMAKE_ARGS% -DCUDAToolkit_LIBRARY_DIR=%BUILD_PREFIX%\Library\lib\x64"
 )
 
 cmake -G "Ninja" ^
