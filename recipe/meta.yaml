@@ -33,7 +33,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cmake                     # [win]
-    - ninja                     # [win]
+    - ninja-base                # [win]
     - pkg-config                # [unix]
     - make                      # [unix]
     - automake                  # [unix]
