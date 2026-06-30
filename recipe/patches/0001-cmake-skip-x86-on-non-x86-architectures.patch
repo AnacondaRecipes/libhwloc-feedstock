@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Eric Lundby <Eric.Lundby@gmail.com>
+Date: Mon, 29 Jun 2026 13:12:20 -0600
+Subject: [PATCH] fix(cmake): guard hwloc-gather-cpuid on win-arm64
+
+Upstream 2.13.0 already uses CMAKE_C_COMPILER_ARCHITECTURE_ID and guards
+topology-x86.c. hwloc-gather-cpuid still unconditionally includes
+cpuid-x86.h and must be skipped on non-x86 Windows (e.g. ARM64).
+
+Based on open-mpi/hwloc#726.
+---
+ contrib/windows-cmake/CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/contrib/windows-cmake/CMakeLists.txt b/contrib/windows-cmake/CMakeLists.txt
+index 5447315..580fde0 100644
+--- a/contrib/windows-cmake/CMakeLists.txt
++++ b/contrib/windows-cmake/CMakeLists.txt
+@@ -227,11 +227,14 @@ if(NOT HWLOC_SKIP_TOOLS)
+         hwloc-calc
+         hwloc-diff
+         hwloc-distrib
+-        hwloc-gather-cpuid
+         hwloc-info
+         hwloc-patch
+     )
+ 
++    if(HWLOC_HAVE_X86_CPUID)
++        list(APPEND TOOLS hwloc-gather-cpuid)
++    endif()
++
+     foreach(tool IN ITEMS ${TOOLS})
+         add_executable(${tool}
+             ${TOPDIR}/utils/hwloc/${tool}.c)
