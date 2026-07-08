@@ -1,0 +1,7 @@
+anaconda_config_version: 1
+upstream_sources:
+  - github:
+      identifier: open-mpi/hwloc
+      use_max_tag: true
+      prefix: hwloc-
+      include_regex: ^hwloc-[\d.]+$
