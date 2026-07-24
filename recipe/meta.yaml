@@ -1,8 +1,8 @@
 {% set name = "libhwloc" %}
 {% set pname = "hwloc" %}
-{% set version = "2.13.0" %}
+{% set version = "2.14.0" %}
 
-{% set build = 2 %}
+{% set build = 0 %}
 {% if cuda_compiler_version == "None" %}
 {% set build = build + 1000 %}
 {% endif %}
@@ -13,9 +13,7 @@ package:
 
 source:
   url: https://www.open-mpi.org/software/{{ pname }}/v{{ '.'.join(version.split('.')[:2]) }}/downloads/{{ pname }}-{{ version }}.tar.gz
-  patches:
-    - patches/0001-cmake-skip-x86-on-non-x86-architectures.patch  # [win]
-  sha256: 1514a5253f0a5c23bc006d3bdd30a6f6125c9a8dc9b5fa4984913d1fff45315d
+  sha256: c4e473493cd5e75898bc72a8cbcd3cc722bfb271c9c8b9b4071fd21567835531
 
 build:
   number: {{ build }}
